@@ -1,0 +1,59 @@
+def getInteger(version) {
+    return Integer.valueOf(version.replaceAll("\\D", ""))
+}
+
+def isBintrayUpload() {
+    def runTasks = gradle.startParameter.taskNames;
+    return runTasks.contains("bintrayUpload")
+}
+
+def doUpload() {
+    if (!isBintrayUpload() || !hasProperty('UPLOAD_VERSION') || !hasProperty('CURRENT_VERSION')) {
+        return false
+    }
+    def upV = getInteger(UPLOAD_VERSION)
+    def curV = getInteger(CURRENT_VERSION)
+    def bool = upV > curV
+    logger.error("uploadVersion:${upV}, currentVersion:${curV}, bool:${bool}")
+    if (bool) {
+        def prop = new Properties()
+        def propFile = file('gradle.properties')
+        prop.load(propFile.newDataInputStream())
+        prop['CURRENT_VERSION'] = UPLOAD_VERSION
+        prop.store(propFile.newWriter(), null)
+    }
+    return bool
+}
+
+if (doUpload()) {
+    apply plugin: 'com.novoda.bintray-release'
+
+    def prop = new Properties();
+    prop.load(file('../local.properties').newDataInputStream())
+    def userName = prop.getProperty('BINTRAY_USER_NAME')
+    def userKey = prop.getProperty('BINTRAY_USER_KEY')
+
+    publish {
+        userOrg = userName//bintray用户名
+        groupId = 'com.shareye'// jcener上的路径
+        artifactId = ARTIFACT_ID//项目名
+        publishVersion = UPLOAD_VERSION//版本号
+        desc = '屏蔽频繁点击事件的注解处理器'//项目描述
+        website = 'https://github.com/sheaye/click-throttle-master'//项目网址，建议github开源库网址
+        bintrayUser = userName//你的bintray的用户名
+        dryRun = false
+        bintrayKey = userKey
+        logger.error("bintrayUser = ${bintrayUser}, bintrayKey = ${bintrayKey}, artiffactId = ${artifactId}")
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+    options {
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+    }
+}

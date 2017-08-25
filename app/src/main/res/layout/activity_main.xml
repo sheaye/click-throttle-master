@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sheaye.sample.activities.MainActivity"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="textView1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="textView2"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="textView3"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/text_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.sheaye.sample.fragments.MainFragment"/>
+
+</LinearLayout>
